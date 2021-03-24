@@ -15,6 +15,10 @@ void ParabolicMethod::set_section(std::pair<double, double> const& section_) {
 	section = section_;
 }
 
+void ParabolicMethod::set_function(IFunction* const function_) {
+	function = function_;
+}
+
 decltype(auto) ParabolicMethod::first_aproximation() {
 	double a = section.first;
 	double b = section.second;

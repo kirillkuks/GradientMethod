@@ -11,6 +11,10 @@ void DichotomyMethod::set_section(std::pair<double, double> const& data) {
 	section = data;
 }
 
+void DichotomyMethod::set_function(IFunction* const function_) {
+	function = function_;
+}
+
 double DichotomyMethod::calculate() {
 	double a = section.first;
 	double b = section.second;

@@ -13,6 +13,7 @@ public:
 
 	virtual void set_tolerance(double) = 0;
 	virtual void set_section(std::pair<double, double> const&) = 0;
+	virtual void set_function(IFunction* const) = 0;
 
 	virtual double calculate() = 0;
 

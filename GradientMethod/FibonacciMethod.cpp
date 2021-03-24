@@ -12,6 +12,10 @@ void FibonacciMethod::set_section(std::pair<double, double> const& seg) {
 	section = seg;
 }
 
+void FibonacciMethod::set_function(IFunction* const function_) {
+	function = function_;
+}
+
 double FibonacciMethod::calculate() {
 	std::map <int, int> fib_num;
 	double num = ceil((section.second - section.first) / tol);

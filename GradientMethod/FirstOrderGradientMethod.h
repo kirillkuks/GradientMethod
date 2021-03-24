@@ -3,15 +3,15 @@
 
 class FirstOrderGradientMethod : public IGradientMethod {
 public:
-	FirstOrderGradientMethod(size_t dim, INDimFunction const* func, double tol);
+	FirstOrderGradientMethod(size_t dim, INDimFunction* const func, double tol);
 
 	void set_tolerance(double tol) override;
-	xn_t calculate() const override;
+	IVector* calculate(double a) const override;
 
 	~FirstOrderGradientMethod() {}
 
 private:
 	size_t dim;
-	INDimFunction const* func;
+	INDimFunction* func;
 	double tol;
 };

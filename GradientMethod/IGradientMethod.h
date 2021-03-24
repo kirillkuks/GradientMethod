@@ -11,10 +11,10 @@ public:
 		SECOND
 	};
 
-	static IGradientMethod* create_grad_method(ORDER order, size_t dim, INDimFunction const* func, double tol);
+	static IGradientMethod* create_grad_method(ORDER order, size_t dim, INDimFunction* const func, double tol);
 
 	virtual void set_tolerance(double tol) = 0;
-	virtual xn_t calculate() const = 0;
+	virtual IVector* calculate(double a = 0.5) const = 0;
 	
 	virtual ~IGradientMethod() = 0 {}
 
