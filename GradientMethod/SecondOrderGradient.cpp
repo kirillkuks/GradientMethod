@@ -19,7 +19,10 @@ IVector* SecondOrderGradientMethod::calculate(double a) const {
 		optimal = IVector::add(optimal, p);
 		delete matrix;
 		matrix = func->get_hesse(optimal);
+		delete p;
 		p = matrix->LDL(func->gradient_at(optimal));
 	}
+	delete matrix;
+	delete p;
 	return optimal;
 }

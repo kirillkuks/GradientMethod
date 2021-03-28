@@ -14,6 +14,7 @@ public:
 	virtual double at(IVector const* x) = 0;
 	virtual IVector* gradient_at(IVector const* x) = 0;
 	virtual size_t get_counter() const = 0;
+	virtual size_t get_grad_counter() const = 0;
 	virtual void update_counter() = 0;
 	virtual Matrix* get_hesse(IVector*) = 0;
 

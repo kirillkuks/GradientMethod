@@ -64,10 +64,10 @@ int main() {
 			std::cout << "\n";
 			std::cout << "Counter: " << n_dim_function->get_counter() << std::endl;
 			std::cout << "Function value: " << n_dim_function->at(x) << std::endl;
-			std::cout << "Counter: " << n_dim_function2->get_counter() << std::endl;
+			std::cout << "Counter: " << matrix->get_counter() + n_dim_function2->get_grad_counter() << std::endl;
 			std::cout << "Function value: " << n_dim_function2->at(y) << std::endl;
 			n_dim_function->update_counter();
-			n_dim_function2->update_counter();
+			matrix->update_counter();
 			std::cout << "\n\n\n";
 
 			delete x;
