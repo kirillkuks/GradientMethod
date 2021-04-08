@@ -13,17 +13,20 @@ void FirstOrderGradientMethod::set_tolerance(double tol_) {
 }
 
 IVector* FirstOrderGradientMethod::calculate(double a) const {
-	IVector* optimal = IVector::create_vector(dim);
+	auto optimal = IVector::create_vector({0, 0});
 
 	if (!(0 < a && a < 1)) {
 		a = 0.5;
 	}
 
+	std::vector<IVector*> seq;
 	auto grad_value = func->gradient_at(optimal);
 
 	IMethod* fibonacci_method = IMethod::create_method(IMethod::METHOD::FIBONACCI, nullptr, tol, { 0, 1 });
 
 	while (grad_value->norm() >= tol) {
+		optimal->print();
+		std::cout << std::endl;
 		IFunction* function = IFunction::create_function([&](double ak) -> double {
 			auto v = grad_value->scale(-ak);
 			auto vk = IVector::add(optimal, v);
@@ -38,12 +41,13 @@ IVector* FirstOrderGradientMethod::calculate(double a) const {
 
 		fibonacci_method->set_function(function);
 		auto ak = fibonacci_method->calculate();
-		std::cout << "ak --- " << ak << std::endl;
+		//std::cout << "ak --- " << ak << std::endl;
 
 		auto tmp = grad_value->scale(-ak);
 		auto t = IVector::add(optimal, tmp);
 
-		delete tmp;
+		seq.push_back(tmp);
+
 		delete optimal;
 
 		optimal = t;
@@ -52,6 +56,14 @@ IVector* FirstOrderGradientMethod::calculate(double a) const {
 		grad_value = func->gradient_at(optimal);
 
 		delete function;
+	}
+
+	for (size_t i = 1; i < seq.size(); ++i) {
+		std::cout << "Norm: " << IVector::dot(seq[i], seq[i - 1]) << std::endl;
+	}
+
+	for (size_t i = 0; i < seq.size(); ++i) {
+		delete seq[i];
 	}
 
 	delete grad_value;

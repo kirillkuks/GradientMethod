@@ -1,6 +1,7 @@
 #include "IGradientMethod.h"
 #include "FirstOrderGradientMethod.h"
-#include "SecondOrderGradient.h"
+#include "SecondOrderGradientMethod.h"
+#include "DFPGradientMethod.h"
 
 IGradientMethod* IGradientMethod::create_grad_method(ORDER order, size_t dim, INDimFunction* const func, double tol) {
 	switch (order) {
@@ -8,6 +9,8 @@ IGradientMethod* IGradientMethod::create_grad_method(ORDER order, size_t dim, IN
 		return new FirstOrderGradientMethod(dim, func, tol);
 	case ORDER::SECOND:
 		return new SecondOrderGradientMethod(dim, func, tol);
+	case ORDER::DFP:
+		return new DFPGradientMethod(dim, func, tol);
 	default:
 		break;
 	}

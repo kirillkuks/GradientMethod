@@ -1,6 +1,9 @@
 #include"Matrix.h"
+#include <cassert>
+#include <iostream>
 
-Hesse::Hesse(std::vector<std::function<double(IVector const*)>> d, int n, int m): num_calls(0), n(n), m(m){
+Hesse::Hesse(std::vector<std::function<double(IVector const*)>> d, size_t n, size_t m) : num_calls(0), n(n), m(m) {
+
 	for (size_t i = 0; i < n; i++) {
 		for (size_t j = 0; j < m; j++) {
 			data[{i, j}] = d[i * m + j];
@@ -31,11 +34,10 @@ void Hesse::update_counter() {
 
 Hesse::~Hesse() {
 	data.clear();
-	n = 0;
-	m = 0;
 }
 
-Matrix::Matrix(std::vector<double> d, int n, int m) : n(n), m(m) {
+Matrix::Matrix(std::vector<double> d, size_t n, size_t m) : n(n), m(m), matrix{ nullptr } {
+
 	data = new double* [n];
 	for (size_t i = 0; i < n; i++) {
 		data[i] = new double[m];
@@ -93,11 +95,82 @@ IVector* Matrix::LDL(IVector* point) {
 	return IVector::create_vector(result);
 }
 
+Matrix::Matrix(Matrix const& mat) : n{ mat.n }, m{ mat.m }, data{ nullptr }, matrix{ nullptr } {
+	size_t size = n * m;
+	matrix = new double[size];
+	std::memcpy(matrix, mat.matrix, size * sizeof(double));
+}
+
 Matrix::~Matrix() {
-	for (size_t i = 0; i < n; i++) {
-		delete data[i];
+	if (data) {
+		for (size_t i = 0; i < n; i++) {
+			delete data[i];
+		}
+		delete data;
 	}
-	delete data;
-	n = 0;
-	m = 0;
+	if (matrix) {
+		delete matrix;
+	}
+}
+
+Matrix::Matrix(size_t size) : n{ size }, m{ size }, data{ nullptr }, matrix{ new double[size * size] } {
+	size_t len = n * m;
+	for (size_t i = 0; i < len; ++i) {
+		matrix[i] = 0;
+	}
+}
+
+double& Matrix::at(size_t i, size_t j) {
+	return matrix[j + i * m];
+}
+
+double Matrix::at(size_t i, size_t j) const {
+	return matrix[j + i * m];
+}
+
+IVector* Matrix::left_vector_multy(IVector const* vec) const {
+	auto size = vec->size();
+
+	assert(m == size);
+
+	IVector* res = IVector::create_vector(size);
+
+	for (size_t i = 0; i < size; ++i) {
+		double xi = 0;
+		for (size_t j = 0; j < size; ++j) {
+			xi += at(i, j) * vec->at(j);
+		}
+		res->at(i) = xi;
+	}
+
+	return res;
+}
+
+void Matrix::set_identity_matrix() {
+	assert(n == m);
+	for (size_t i = 0; i < n; ++i) {
+		for (size_t j = 0; j < m; ++j) {
+			at(i, j) = i == j ? 1 : 0;
+		}
+	}
+}
+
+void Matrix::sub_matrix(Matrix const& mat) {
+	assert(n == m);
+	assert(mat.n == mat.m);
+	assert(n == mat.n);
+
+	for (size_t i = 0; i < n; ++i) {
+		for (size_t j = 0; j < m; ++j) {
+			at(i, j) -= mat.at(i, j);
+		}
+	}
+}
+
+void Matrix::for_each(std::function<double(double)> const& func) {
+	assert(matrix);
+	size_t size = n * m;
+	for (size_t i = 0; i < size; ++i) {
+		matrix[i] = func(matrix[i]);
+	}
 }
