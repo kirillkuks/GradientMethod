@@ -33,6 +33,7 @@ private:
 class Hesse {
 public:
 	Hesse(std::vector<std::function<double(IVector const*)>>, size_t, size_t);
+
 	Matrix* at(IVector*);
 	size_t get_counter();
 	void update_counter();

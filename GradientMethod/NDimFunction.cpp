@@ -5,6 +5,7 @@ namespace {
 	public:
 		NDimFunction(std::function<double(IVector const*)> const& func, std::function<IVector* (IVector const*)> const& grad, Hesse* hesse);
 
+
 		double at(IVector const* x) override;
 		IVector* gradient_at(IVector const* x) override;
 		size_t get_counter() const override;
@@ -50,6 +51,14 @@ size_t NDimFunction::get_grad_counter() const {
 void NDimFunction::update_counter() {
 	counter = 0;
 	grad_counter = 0;
+}
+
+Matrix* NDimFunction::get_hesse(IVector* point) {
+	return hesse->at(point);
+}
+
+NDimFunction::~NDimFunction() {
+	delete hesse;
 }
 
 Matrix* NDimFunction::get_hesse(IVector* point) {

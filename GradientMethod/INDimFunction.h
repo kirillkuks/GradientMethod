@@ -11,6 +11,7 @@ protected:
 public:
 	static INDimFunction* create_function(std::function<double(IVector const*)> const& func, std::function<IVector* (IVector const*)> const& grad, Hesse* hesse);
 
+
 	virtual double at(IVector const* x) = 0;
 	virtual IVector* gradient_at(IVector const* x) = 0;
 	virtual size_t get_counter() const = 0;

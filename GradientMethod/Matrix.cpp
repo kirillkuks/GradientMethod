@@ -3,6 +3,7 @@
 #include <iostream>
 
 Hesse::Hesse(std::vector<std::function<double(IVector const*)>> d, size_t n, size_t m) : num_calls(0), n(n), m(m) {
+
 	for (size_t i = 0; i < n; i++) {
 		for (size_t j = 0; j < m; j++) {
 			data[{i, j}] = d[i * m + j];
@@ -36,6 +37,7 @@ Hesse::~Hesse() {
 }
 
 Matrix::Matrix(std::vector<double> d, size_t n, size_t m) : n(n), m(m), matrix{ nullptr } {
+
 	data = new double* [n];
 	for (size_t i = 0; i < n; i++) {
 		data[i] = new double[m];

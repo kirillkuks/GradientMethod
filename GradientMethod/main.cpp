@@ -17,13 +17,28 @@ int main() {
 			auto x1 = x->at(0), x2 = x->at(1);
 			return a * x1 + x2 + 4 * sqrt(1 + b * x1 * x1 + c * x2 * x2);
 		};
+		auto funcDer11 = [a, b, c](IVector const* x) -> double {
+			assert(x->size() == N);
+			auto x1 = x->at(0), x2 = x->at(1);
+			return (4 * b + 4 * b * c * x2 * x2) / ((1 + b * x1 * x1 + c * x2 * x2) * sqrt(1 + b * x1 * x1 + c * x2 * x2));
+		};
+		auto funcDer12 = [a, b, c](IVector const* x) -> double {
+			assert(x->size() == N);
+			auto x1 = x->at(0), x2 = x->at(1);
+			return (4 * b * c * x1 * x2) / ((1 + b * x1 * x1 + c * x2 * x2) * sqrt(1 + b * x1 * x1 + c * x2 * x2));
+		};
+		auto funcDer22 = [a, b, c](IVector const* x) -> double {
+			assert(x->size() == N);
+			auto x1 = x->at(0), x2 = x->at(1);
+			return (4 * c + 4 * b * c * x1 * x1) / ((1 + b * x1 * x1 + c * x2 * x2) * sqrt(1 + b * x1 * x1 + c * x2 * x2));
+		};
 		auto grad = [a, b, c](IVector const* x) -> IVector* {
 			auto size = x->size();
 			assert(size == N);
 
 			auto x1 = x->at(0), x2 = x->at(1);
 			auto value = sqrt(1 + b * x1 * x1 + c * x2 * x2);
-			return IVector::create_vector({ a + 4.0 * b * x1 / value, 1 + 4.0 * c * x2 / value });
+			return IVector::create_vector({a + 4.0 * b * x1 / value, 1 + 4.0 * c * x2 / value });
 		};
 
 
@@ -42,10 +57,15 @@ int main() {
 			auto x = gradient_method->calculate();
 			x->print();
 			std::cout << "\n";
+			y->print();
+			std::cout << "\n";
 			std::cout << "Counter: " << n_dim_function->get_counter() << std::endl;
 			std::cout << "Gradient counter: " << n_dim_function->get_grad_counter() << std::endl;
 			std::cout << "Function value: " << n_dim_function->at(x) << std::endl;
+			std::cout << "Counter: " << matrix->get_counter() + n_dim_function2->get_grad_counter() << std::endl;
+			std::cout << "Function value: " << n_dim_function2->at(y) << std::endl;
 			n_dim_function->update_counter();
+			matrix->update_counter();
 			std::cout << "\n\n\n";
 
 			delete x;
@@ -62,6 +82,7 @@ int main() {
 			std::cout << "\n\n\n";
 
 			delete y;*/
+
 		}
 
 		delete gradient_method;
