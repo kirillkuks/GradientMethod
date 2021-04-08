@@ -7,7 +7,6 @@
 #define __CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
-
 #define N 2
 
 int main() {
@@ -28,28 +27,46 @@ int main() {
 		};
 
 
-		std::vector<double> tols = { 0.1, 0.001, 0.00001 };
-		auto n_dim_function = INDimFunction::create_function(func, grad);
+		std::vector<double> tols = { 0.0001 };
+		size_t signs = 2;
+
+
+		auto n_dim_function = INDimFunction::create_function(func, grad, nullptr);
 		auto gradient_method = IGradientMethod::create_grad_method(IGradientMethod::ORDER::FIRST, N, n_dim_function, 0);
+		auto DFP_method = IGradientMethod::create_grad_method(IGradientMethod::ORDER::DFP, N, n_dim_function, 0);
 
 		for (auto tol : tols) {
-			gradient_method->set_tolerance(tol);
-			IVector* x = gradient_method->calculate();
+			std::cout << "Tol: " << tol << std::endl;
 
-			std::cout << "Tolerance: " << tol << "\nOptimal point: ";
+			gradient_method->set_tolerance(tol);
+			auto x = gradient_method->calculate();
 			x->print();
 			std::cout << "\n";
 			std::cout << "Counter: " << n_dim_function->get_counter() << std::endl;
+			std::cout << "Gradient counter: " << n_dim_function->get_grad_counter() << std::endl;
 			std::cout << "Function value: " << n_dim_function->at(x) << std::endl;
 			n_dim_function->update_counter();
 			std::cout << "\n\n\n";
 
 			delete x;
+
+			/*DFP_method->set_tolerance(tol);
+			auto y = DFP_method->calculate();
+			std::cout << "Optimal:\n";
+			y->print();
+			std::cout << std::endl;
+			std::cout << "Counter: " << n_dim_function->get_counter() << std::endl;
+			std::cout << "Gradient counter: " << n_dim_function->get_grad_counter() << std::endl;
+			std::cout << "Function value: " << n_dim_function->at(y) << std::endl;
+			n_dim_function->update_counter();
+			std::cout << "\n\n\n";
+
+			delete y;*/
 		}
 
 		delete gradient_method;
 		delete n_dim_function;
-
+		delete DFP_method;
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);

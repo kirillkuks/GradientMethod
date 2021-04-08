@@ -8,7 +8,8 @@ protected:
 public:
 	enum class ORDER {
 		FIRST,
-		SECOND
+		SECOND,
+		DFP,
 	};
 
 	static IGradientMethod* create_grad_method(ORDER order, size_t dim, INDimFunction* const func, double tol);
